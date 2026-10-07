@@ -124,7 +124,7 @@ function ChartRow({ title, unit, yMin, yMax, series, history }: RowProps) {
               enabled: true,
               callbacks: {
                 title: (items) => `${(items[0]?.parsed.x ?? 0).toFixed(1)}s`,
-                label: (item) => `${item.dataset.label}: ${(item.parsed.y ?? 0).toFixed(2)}${unit}`,
+                label: (item) => `${item.dataset.label}: ${item.parsed.y !== null && Number.isFinite(item.parsed.y) ? item.parsed.y.toFixed(2) + unit : "—"}`,
               },
             },
           },
@@ -153,7 +153,7 @@ function ChartRow({ title, unit, yMin, yMax, series, history }: RowProps) {
           {series.map((s, i) => (
             <span key={s.label} className="legend-item">
               <span className="legend-swatch" style={{ background: s.color }} />
-              {s.label}: {latest[i] === null ? "—" : `${latest[i]!.toFixed(2)}${unit}`}
+              {s.label}: {latest[i] === null || !Number.isFinite(latest[i]) ? "—" : `${latest[i]!.toFixed(2)}${unit}`}
             </span>
           ))}
         </span>

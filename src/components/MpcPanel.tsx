@@ -47,9 +47,9 @@ export function MpcPanel({ mpc, mpcStatic, schemaWarn }: Props) {
       <div className="panel mpc-panel">
         <div className="panel-title">MPC</div>
         <div className="waiting">
-          /rl_raceline/mpc_debug がまだ来ていません。
+          MPC内部情報がありません。
           <br />
-          RL_CONTROLLER=mpc で走っているか、RL_MPC_DEBUG=0 で切っていないかを確認してください。
+          自己位置・操作量は「Status / トピック」で確認できます。MPC表示には対応するデバッグトピックとスキーマが必要です。
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ export function MpcPanel({ mpc, mpcStatic, schemaWarn }: Props) {
       <div className="panel-title">
         MPC
         <span className={mpc.rollout_ext ? "mpc-badge" : "mpc-badge mpc-badge-warn"}>
-          {mpc.rollout_ext ? "C拡張" : "Python版(10倍遅い)"}
+          {mpc.rollout_ext ? "C拡張" : "Python版"}
         </span>
         <span className={mpc.step_ms > 60 ? "mpc-badge mpc-badge-warn" : "mpc-badge"}>
           {n(mpc.step_ms, 1)} ms/step

@@ -1,6 +1,6 @@
 # 公開用ビューアーの検証状況
 
-2026-10-08時点。公開は未完了です。
+2026-10-08時点。ローカルの公開前検証は完了。GitHubリポジトリとPages設定を作成し、デプロイを進めています。
 
 | 項目 | 結果 |
 | --- | --- |
@@ -13,46 +13,39 @@
 | `npm test` | 10項目PASS |
 | TypeScript / Vite本番ビルド | PASS |
 | Pythonファイルの構文検査 | PASS。ROS接続の実行検証は含まない |
-| lockfileの`npm ci --dry-run --offline` | PASS。今回のクリーンインストールは未実施 |
-| 修正後のPC/390px画面、地図、再生、復帰 | 未実行。ローカルサーバーのlistenがEPERM |
+| クリーンインストール `npm ci` | PASS。91パッケージを新規インストール |
+| 修正後のPC/390px画面、地図、再生、復帰 | PASS。PC/390pxの6状態・12枚を目視、自動検査 |
 | ROSライブ接続 | 未実行。ROS/実車環境が必要 |
-| GitHubリポジトリ作成・push・Pagesデプロイ | 未完了。GitHub CLIのネットワーク接続が失敗 |
+| GitHubリポジトリ作成・push・Pagesデプロイ | 公開リポジトリとPages設定を作成済み。デプロイ確認中 |
 
 ## 画面確認
 
 前回の入口・再生・エラーを1440×1000 / 390×844で撮影し、6枚を目視確認しました。画像は生成物としてローカル`artifacts/`に残し、Gitに含めません。
 
-下表の修正後欄は、実際の再撮影ができるまで合格扱いにしません。`npm run build && npm run test:browser`は同じ3状態と2サイズを再現し、修正後の画像を作ります。再生位置はShift+右矢印12回で12秒、デモは合成データ、テーマはダーク、表示倍率は1です。公開URLのサブパスを模したパスでテストします。
+入口・再生・エラーを同じ条件で再撮影して確認しました。さらにMCAP+JSONの取り込み、レイヤ操作、不正接続URLの6枚を追加して確認しています。再生位置はShift+右矢印12回で12秒、データは合成、テーマはダーク、表示倍率は1です。公開URLのサブパスを模したパスでテストします。
 
 | Screen | Before | Finding | Change | After | Result |
 | --- | --- | --- | --- | --- | --- |
-| 入口 / PC | [画像](../artifacts/visual-feedback/before/01-entry-desktop.png) | 空の地図に入口の案内がない | 使い方と合成デモの入口を追加 | 未取得 | 未確認 |
-| 入口 / 390px | [画像](../artifacts/visual-feedback/before/01-entry-mobile.png) | 固定カラムとヘッダーがはみ出す | 入口を単一カラムにし操作を折り返す | 未取得 | 未確認 |
-| 再生 / PC | [画像](../artifacts/visual-feedback/before/02-replay-desktop.png) | 数値は読めるが地図が空白 | canvas領域を明示、ResizeObserver再描画、合成地図を適用 | 未取得 | 原因仮説の検証待ち |
-| 再生 / 390px | [画像](../artifacts/visual-feedback/before/02-replay-mobile.png) | 地図と再生操作が見切れる | 地図を先頭にして縦に積む | 未取得 | 未確認 |
-| エラー / PC | [画像](../artifacts/visual-feedback/before/03-error-desktop.png) | エラー下に意味のない空パネルが残る | 入口を保ち、MCAP形式のエラーを説明する | 未取得 | 未確認 |
-| エラー / 390px | [画像](../artifacts/visual-feedback/before/03-error-mobile.png) | エラーと操作が窮屈 | エラー領域と入口を画面幅に収める | 未取得 | 未確認 |
+| 入口 / PC | [画像](../artifacts/visual-feedback/before/01-entry-desktop.png) | 空の地図に入口の案内がない | 使い方と合成デモの入口を追加 | [画像](../artifacts/visual-feedback/after/01-entry-desktop.png) | PASS |
+| 入口 / 390px | [画像](../artifacts/visual-feedback/before/01-entry-mobile.png) | 固定カラムとヘッダーがはみ出す | 入口を単一カラムにし操作を折り返す | [画像](../artifacts/visual-feedback/after/01-entry-mobile.png) | PASS |
+| 再生 / PC | [画像](../artifacts/visual-feedback/before/02-replay-desktop.png) | 数値は読めるが地図が空白 | canvas領域を明示、ResizeObserver再描画、合成地図を適用 | [画像](../artifacts/visual-feedback/after/02-replay-desktop.png) | PASS。地図描画を確認 |
+| 再生 / 390px | [画像](../artifacts/visual-feedback/before/02-replay-mobile.png) | 地図と再生操作が見切れる | 地図を先頭にして縦に積む | [画像](../artifacts/visual-feedback/after/02-replay-mobile.png) | PASS |
+| エラー / PC | [画像](../artifacts/visual-feedback/before/03-error-desktop.png) | エラー下に意味のない空パネルが残る | 入口を保ち、MCAP形式のエラーを説明する | [画像](../artifacts/visual-feedback/after/03-error-desktop.png) | PASS |
+| エラー / 390px | [画像](../artifacts/visual-feedback/before/03-error-mobile.png) | エラーと操作が窮屈 | エラー領域と入口を画面幅に収める | [画像](../artifacts/visual-feedback/after/03-error-mobile.png) | PASS |
 
-ブラウザ検証では未処理例外・横方向のはみ出しを失敗条件にします。canvasの描画色が存在すること、再生を開始できること、不正ファイルの後にデモへ復帰できることも確認します。スクリーンショットは別途1枚ずつ目視する必要があります。ライブ・レイヤ設定・追加JSONの全状態の画面確認は別途必要です。
+## 追加の状態
 
-## 実行を止めているエラー
+| Screen | Before | Finding | Change | After | Result |
+| --- | --- | --- | --- | --- | --- |
+| MCAP+JSON / PC | 新規の公開機能 | ローカルファイルの入口が必要 | 複数ファイルと地図の取り込み | [画像](../artifacts/visual-feedback/after/04-local-files-desktop.png) | PASS |
+| MCAP+JSON / 390px | 新規の公開機能 | 同上 | 同上 | [画像](../artifacts/visual-feedback/after/04-local-files-mobile.png) | PASS |
+| レイヤ / PC | 未撮影 | 予測が重なるので選択が必要 | チェックボックス操作を確認 | [画像](../artifacts/visual-feedback/after/05-layers-desktop.png) | PASS |
+| レイヤ / 390px | 未撮影 | 小さい地図で設定が収まるか | スクロール可能な設定を確認 | [画像](../artifacts/visual-feedback/after/05-layers-mobile.png) | PASS |
+| 不正接続URL / PC | 新規の公開機能 | 入力エラーからの復帰が必要 | スキームの説明と切断を確認 | [画像](../artifacts/visual-feedback/after/06-connection-error-desktop.png) | PASS |
+| 不正接続URL / 390px | 新規の公開機能 | 同上 | 同上 | [画像](../artifacts/visual-feedback/after/06-connection-error-mobile.png) | PASS |
 
-```text
-Error: listen EPERM: operation not permitted 127.0.0.1
-    at Server.setupListenHandle [as _listen2] (node:net:1918:21)
-    at listenInCluster (node:net:1997:12)
-    at node:net:2206:7
-    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
-  code: 'EPERM',
-  errno: -1,
-  syscall: 'listen',
-  address: '127.0.0.1'
-}
-```
+未処理例外・横方向のはみ出しは0件。canvas描画、再生開始、不正ファイルからデモへの復帰、ローカルMCAP+地図JSON、レイヤ切り替え、接続URLのエラー表示と切断を検証しました。未収録IMUの最新値ラベルは「—」です。
 
-```text
-error connecting to api.github.com
-check your internet connection or https://githubstatus.com
-```
+画像のリンクはローカル作業用です。GitHubではActionsの`viewer-screenshots`成果物を参照してください。公開READMEには[再生画面](images/replay.png)を含めています。
 
-公開完了には、修正後のブラウザ確認、GitHubへのpush、Actionsの成功、実際の公開URLでデモの再生を確認する必要があります。[PUBLISHING.md](PUBLISHING.md)に再開手順があります。
+ライブの実車ROS接続と、全種類の実走行データでの検証は未実行です。合成デモは性能評価ではありません。

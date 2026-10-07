@@ -1113,8 +1113,8 @@ export function TrackView({
         <LegendItem color="#fbbf24" label="横にずらした参照線" />
         <LegendItem color="#3b82f6" label="通れる回廊(車体+余裕込み)" />
         <LegendItem color="#c084fc" label="相手の予測位置(薄い=分岐)" />
-        <LegendItem color="#8a5cff" label="lanelet2境界(壁ペナルティはここで出る)" />
-        <LegendItem color="#ff8a3d" label="壁の距離場(判定より約0.6m外)" />
+        <LegendItem color="#8a5cff" label="車線境界" />
+        <LegendItem color="#ff8a3d" label="壁の距離場" />
         <LegendItem color="#60a5fa" label="他の車(3台走行)" />
       </div>
     </div>

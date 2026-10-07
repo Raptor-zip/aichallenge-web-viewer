@@ -2,6 +2,10 @@ name: Verify viewer
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - docs/**
+      - README.md
+      - LICENSE
   pull_request:
 permissions:
   contents: read
