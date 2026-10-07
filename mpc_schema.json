@@ -1,0 +1,151 @@
+{
+  "_comment": [
+    "/rl_raceline/mpc_static と /rl_raceline/mpc_debug の並びの唯一の定義。",
+    "読む側が2つある(バックエンドの mpc_payload.py と、rosbag再生のために",
+    "ブラウザ側で直接デコードする frontend/src/mpc/decode.ts)ので、",
+    "並びをここへ1本化する。片方だけ直して静かにズレる事故を防ぐため。",
+    "書く側(rl_raceline_controller_node.py の _publish_mpc_* )だけは手書きのまま。",
+    "そちらとの一致は backend/test_mpc_payload.py が実際のノード出力で見張る。",
+    "",
+    "type: f=float / i=int / b=bool(>0.5) / fpos=負なら null(未設定の意味) /",
+    "      wx,wy=world座標(原点を引く) / enum:<name>=番号を文字列へ",
+    "name にドットを含めるとネストしたオブジェクトになる(best.steer など)。"
+  ],
+  "schema": 1,
+  "enums": {
+    "plan_why": ["off", "no_opp", "far", "fast", "slow", "nocatch",
+                 "long", "noblk", "busy", "ok", "tight", "keep"]
+  },
+  "static": {
+    "header_len": 32,
+    "header": [
+      {"name": "_version", "type": "i"},
+      {"name": "n", "type": "i"},
+      {"name": "total_len", "type": "f", "round": 2},
+      {"name": "horizon", "type": "i"},
+      {"name": "dt", "type": "f", "round": 4},
+      {"name": "n_steer", "type": "i"},
+      {"name": "n_steer2", "type": "i"},
+      {"name": "n_off", "type": "i"},
+      {"name": "n_accel", "type": "i"},
+      {"name": "n_accel_v2x", "type": "i"},
+      {"name": "max_steer", "type": "f", "round": 4},
+      {"name": "wheel_base", "type": "f", "round": 4},
+      {"name": "safe", "type": "f", "round": 3},
+      {"name": "safe_pass", "type": "f", "round": 3},
+      {"name": "w_wall", "type": "f", "round": 2},
+      {"name": "w_wall_pass", "type": "f", "round": 2},
+      {"name": "cbf_alpha", "type": "f", "round": 3},
+      {"name": "cbf_rmin", "type": "f", "round": 3},
+      {"name": "box_lon", "type": "f", "round": 3},
+      {"name": "box_lat", "type": "f", "round": 3},
+      {"name": "clear_w", "type": "f", "round": 3},
+      {"name": "off_max_m", "type": "f", "round": 3},
+      {"name": "lon_min", "type": "f", "round": 3},
+      {"name": "v_max", "type": "f", "round": 3},
+      {"name": "plan_on", "type": "b"},
+      {"name": "v2x_enable", "type": "b"},
+      {"name": "hard_box", "type": "b"},
+      {"name": "smoothed", "type": "b"},
+      {"name": "w_lat", "type": "f", "round": 3},
+      {"name": "w_head", "type": "f", "round": 3},
+      {"name": "w_prog", "type": "f", "round": 3},
+      {"name": "w_dsteer", "type": "f", "round": 3}
+    ],
+    "blocks": [
+      {"name": "ref_path", "kind": "xy", "count": "n"},
+      {"name": "off_lo", "kind": "scalar", "count": "n", "round": 3},
+      {"name": "off_hi", "kind": "scalar", "count": "n", "round": 3},
+      {"name": "v_prof", "kind": "scalar", "count": "n", "round": 3},
+      {"name": "s", "kind": "scalar", "count": "n", "round": 3}
+    ]
+  },
+  "debug": {
+    "header_len": 48,
+    "header": [
+      {"name": "_version", "type": "i"},
+      {"name": "horizon", "type": "i"},
+      {"name": "dt", "type": "f", "round": 4},
+      {"name": "n_cand", "type": "i"},
+      {"name": "n_opp_pred", "type": "i"},
+      {"name": "n_opp_raw", "type": "i"},
+      {"name": "best.steer", "type": "f", "round": 5},
+      {"name": "best.accel", "type": "f", "round": 4},
+      {"name": "best.off", "type": "f", "round": 4},
+      {"name": "best.cost", "type": "f", "round": 2},
+      {"name": "off_cmd", "type": "f", "round": 4},
+      {"name": "off_delta", "type": "f", "round": 4},
+      {"name": "plan_tgt", "type": "f", "round": 4},
+      {"name": "v_cap", "type": "fpos", "round": 3},
+      {"name": "acc_cap", "type": "fpos", "round": 3},
+      {"name": "threat", "type": "b"},
+      {"name": "passing", "type": "b"},
+      {"name": "plan_active", "type": "b"},
+      {"name": "plan_ok", "type": "b"},
+      {"name": "plan_hold", "type": "b"},
+      {"name": "plan_why", "type": "enum:plan_why"},
+      {"name": "side", "type": "f", "round": 1},
+      {"name": "side_left", "type": "i"},
+      {"name": "follow_hold", "type": "i"},
+      {"name": "launched", "type": "b"},
+      {"name": "pen_hold", "type": "i"},
+      {"name": "clearance", "type": "f", "round": 3},
+      {"name": "lat", "type": "f", "round": 3},
+      {"name": "idx", "type": "i"},
+      {"name": "s_ego", "type": "f", "round": 2},
+      {"name": "speed", "type": "f", "round": 3},
+      {"name": "steer_actual", "type": "f", "round": 5},
+      {"name": "steer_prev", "type": "f", "round": 5},
+      {"name": "cbf_used", "type": "b"},
+      {"name": "step_ms", "type": "f", "round": 2},
+      {"name": "mode_code", "type": "i"},
+      {"name": "n_safe", "type": "i"},
+      {"name": "lat_slope", "type": "f", "round": 4},
+      {"name": "plan_keep", "type": "i"},
+      {"name": "pose.x", "type": "wx", "round": 3},
+      {"name": "pose.y", "type": "wy", "round": 3},
+      {"name": "pose.yaw", "type": "f", "round": 5},
+      {"name": "boost_remaining", "type": "f", "round": 1},
+      {"name": "is_boosting", "type": "b"},
+      {"name": "race_live", "type": "b"},
+      {"name": "lap_time", "type": "f", "round": 3},
+      {"name": "session_time", "type": "f", "round": 2},
+      {"name": "rollout_ext", "type": "b"}
+    ],
+    "sections": [
+      {"name": "best_traj", "kind": "xy", "count": "horizon"},
+      {"name": "ref_points", "kind": "xy", "count": "horizon"},
+      {"name": "ref_shifted", "kind": "xy", "count": "horizon"},
+      {"name": "corridor_lo", "kind": "scalar", "count": "horizon", "round": 3},
+      {"name": "corridor_hi", "kind": "scalar", "count": "horizon", "round": 3},
+      {"name": "s_ref", "kind": "scalar", "count": "horizon", "round": 3},
+      {
+        "name": "cands", "kind": "records", "count": "n_cand",
+        "fields": [
+          {"name": "steer", "type": "f", "round": 5},
+          {"name": "cost", "type": "f", "round": 2},
+          {"name": "hit", "type": "b"}
+        ],
+        "trailing": {"name": "pts", "kind": "xy", "count": "horizon"}
+      },
+      {
+        "name": "opp_pred", "kind": "records", "count": "n_opp_pred",
+        "fields": [{"name": "w", "type": "f", "round": 3}],
+        "trailing": {"name": "pts", "kind": "xy", "count": "horizon"}
+      },
+      {
+        "name": "opp", "kind": "records", "count": "n_opp_raw",
+        "fields": [
+          {"name": "x", "type": "wx", "round": 3},
+          {"name": "y", "type": "wy", "round": 3},
+          {"name": "v", "type": "f", "round": 3},
+          {"name": "s", "type": "f", "round": 2},
+          {"name": "lat", "type": "f", "round": 3},
+          {"name": "vlat", "type": "f", "round": 3},
+          {"name": "gap", "type": "f", "round": 2},
+          {"name": "nobs", "type": "i"}
+        ]
+      }
+    ]
+  }
+}
