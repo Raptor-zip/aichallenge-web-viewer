@@ -1,0 +1,77 @@
+{
+  "appUrl": "http://127.0.0.1:5208/",
+  "cdpPort": 9333,
+  "outputDir": "artifacts/visual-feedback/before",
+  "settleMs": 400,
+  "failOnRuntimeError": false,
+  "checkHorizontalOverflow": false,
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "mobile": false,
+      "deviceScaleFactor": 1
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "mobile": true,
+      "deviceScaleFactor": 1
+    }
+  ],
+  "screens": [
+    {
+      "name": "01-entry",
+      "steps": [
+        {
+          "action": "wait-for-selector",
+          "selector": "main"
+        }
+      ]
+    },
+    {
+      "name": "02-replay",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "?bag=demo.mcap"
+        },
+        {
+          "action": "wait-for-selector",
+          "selector": ".playback-bar"
+        },
+        {
+          "action": "evaluate",
+          "expression": "for(let i=0;i<12;i++)window.dispatchEvent(new KeyboardEvent('keydown',{code:'ArrowRight',shiftKey:true,bubbles:true}))"
+        },
+        {
+          "action": "sleep",
+          "ms": 200
+        }
+      ]
+    },
+    {
+      "name": "03-error",
+      "steps": [
+        {
+          "action": "navigate",
+          "url": "/"
+        },
+        {
+          "action": "wait-for-selector",
+          "selector": "input[type=file]"
+        },
+        {
+          "action": "evaluate",
+          "expression": "(()=>{const dt=new DataTransfer();dt.items.add(new File(['broken'],'invalid.mcap'));const el=document.querySelector('input[type=file]');el.files=dt.files;el.dispatchEvent(new Event('change',{bubbles:true}));})()"
+        },
+        {
+          "action": "wait-for-selector",
+          "selector": ".bag-error"
+        }
+      ]
+    }
+  ]
+}

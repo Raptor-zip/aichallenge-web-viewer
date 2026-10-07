@@ -1,0 +1,15 @@
+:root {
+  color-scheme: dark;
+  font-family: -apple-system, "Segoe UI", "Hiragino Sans", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: #05070a;
+  color: #e6edf3;
+}

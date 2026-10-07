@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.venv*/
+__pycache__/
+*.py[cod]
+artifacts/
+.env
+.env.*
+!.env.example
+
+/public/demo.mcap
+/public/demo-track.json
+/public/THIRD_PARTY_NOTICES.txt

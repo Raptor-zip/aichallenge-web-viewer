@@ -1,0 +1,44 @@
+{
+  "name": "aichallenge-web-viewer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host",
+    "demo:generate": "vite-node scripts/make-demo.ts",
+    "test": "vite-node scripts/test-bag.ts",
+    "predev": "npm run demo:generate",
+    "prebuild": "npm run demo:generate && node scripts/make-notices.mjs",
+    "pretest": "npm run demo:generate",
+    "test:browser": "node scripts/test-browser.mjs"
+  },
+  "dependencies": {
+    "@foxglove/omgidl-parser": "^1.2.2",
+    "@foxglove/omgidl-serialization": "^1.2.5",
+    "@foxglove/ros2idl-parser": "^0.3.6",
+    "@foxglove/rosmsg": "^5.0.5",
+    "@foxglove/rosmsg2-serialization": "^3.1.2",
+    "@mcap/core": "^2.2.1",
+    "@mcap/support": "^1.1.0",
+    "chart.js": "^4.5.1",
+    "fzstd": "^0.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-node": "^6.0.0",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0"
+  },
+  "description": "Browser-local ROS 2 MCAP replay and MPC diagnostics for AI Challenge",
+  "engines": {
+    "node": ">=24"
+  }
+}
