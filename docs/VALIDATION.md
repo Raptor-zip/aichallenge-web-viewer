@@ -1,6 +1,8 @@
 # 公開用ビューアーの検証状況
 
-2026-10-08時点。ローカルの公開前検証は完了。GitHubリポジトリとPages設定を作成し、デプロイを進めています。
+2026-10-08時点。公開と実URLでの確認が完了しました。
+
+[公開ページ](https://raptor-zip.github.io/aichallenge-web-viewer/) / [ソース](https://github.com/Raptor-zip/aichallenge-web-viewer)
 
 | 項目 | 結果 |
 | --- | --- |
@@ -15,8 +17,9 @@
 | Pythonファイルの構文検査 | PASS。ROS接続の実行検証は含まない |
 | クリーンインストール `npm ci` | PASS。91パッケージを新規インストール |
 | 修正後のPC/390px画面、地図、再生、復帰 | PASS。PC/390pxの6状態・12枚を目視、自動検査 |
+| 公開URLでのデモ・ファイル取り込み | PASS。ChromeでPC/390pxの12状態を再確認、未処理例外0 |
 | ROSライブ接続 | 未実行。ROS/実車環境が必要 |
-| GitHubリポジトリ作成・push・Pagesデプロイ | 公開リポジトリとPages設定を作成済み。デプロイ確認中 |
+| GitHubリポジトリ作成・push・Pagesデプロイ | PASS。公開リポジトリへpush、GitHub Pages配置成功 |
 
 ## 画面確認
 
@@ -49,3 +52,24 @@
 画像のリンクはローカル作業用です。GitHubではActionsの`viewer-screenshots`成果物を参照してください。公開READMEには[再生画面](images/replay.png)を含めています。
 
 ライブの実車ROS接続と、全種類の実走行データでの検証は未実行です。合成デモは性能評価ではありません。
+
+## 公開先での確認
+
+[Verify viewer](https://github.com/Raptor-zip/aichallenge-web-viewer/actions/runs/37702692287)と[Publish viewer](https://github.com/Raptor-zip/aichallenge-web-viewer/actions/runs/37702774644)が成功しました。配置したアプリのコミットは`91e55b7`です。その後の検証記録の変更はアプリの配信内容を変えません。
+
+実際のHTTPS公開ページをChromeで開き、同じ操作列を再実行しました。WorkerとMCAPの読み込み、再生、ローカルファイル取り込み、レイヤ、不正URLからの復帰が成功しています。以下の12枚も個別に目視しました。
+
+| Screen | Before | Finding | Change | After | Result |
+| --- | --- | --- | --- | --- | --- |
+| 入口 / PC | [ローカル](../artifacts/visual-feedback/after/01-entry-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/01-entry-desktop.png) | PASS |
+| 入口 / 390px | [ローカル](../artifacts/visual-feedback/after/01-entry-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/01-entry-mobile.png) | PASS |
+| 再生 / PC | [ローカル](../artifacts/visual-feedback/after/02-replay-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/02-replay-desktop.png) | PASS |
+| 再生 / 390px | [ローカル](../artifacts/visual-feedback/after/02-replay-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/02-replay-mobile.png) | PASS |
+| エラー / PC | [ローカル](../artifacts/visual-feedback/after/03-error-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/03-error-desktop.png) | PASS |
+| エラー / 390px | [ローカル](../artifacts/visual-feedback/after/03-error-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/03-error-mobile.png) | PASS |
+| MCAP+JSON / PC | [ローカル](../artifacts/visual-feedback/after/04-local-files-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/04-local-files-desktop.png) | PASS |
+| MCAP+JSON / 390px | [ローカル](../artifacts/visual-feedback/after/04-local-files-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/04-local-files-mobile.png) | PASS |
+| レイヤ / PC | [ローカル](../artifacts/visual-feedback/after/05-layers-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/05-layers-desktop.png) | PASS |
+| レイヤ / 390px | [ローカル](../artifacts/visual-feedback/after/05-layers-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/05-layers-mobile.png) | PASS |
+| 不正接続URL / PC | [ローカル](../artifacts/visual-feedback/after/06-connection-error-desktop.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/06-connection-error-desktop.png) | PASS |
+| 不正接続URL / 390px | [ローカル](../artifacts/visual-feedback/after/06-connection-error-mobile.png) | 公開先の配信・表示を確認 | 追加修正なし | [公開先](../artifacts/visual-feedback/public/06-connection-error-mobile.png) | PASS |
