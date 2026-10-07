@@ -9,3 +9,4 @@
 - 2026-10-08 07:51:24 [2026-10-08-05 viewer-publication-validation](logs/2026-10-08-05-viewer-publication-validation.md) — phase: 公開検証 / iter: 1 / status: failed
 - 2026-10-08 08:25:14 [2026-10-08-06 viewer-publication-resume](logs/2026-10-08-06-viewer-publication-resume.md) — phase: 公開 / iter: 2 / status: partial
 - 2026-10-08 08:26:52 [2026-10-08-07 chart-missing-label](logs/2026-10-08-07-chart-missing-label.md) — phase: 画面検証 / iter: 2 / status: partial
+- 2026-10-08 08:34:27 [2026-10-08-08 viewer-release-complete](logs/2026-10-08-08-viewer-release-complete.md) — phase: 公開 / iter: 2 / status: success
