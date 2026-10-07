@@ -6,7 +6,11 @@ Team KSKで使用していたAWSIM Debug Dashboardから、自作のビューア
 
 ## 試す
 
-Node.js 24以上が必要です。
+[公開ビューアーを開く](https://raptor-zip.github.io/aichallenge-web-viewer/) → 「60秒のデモを開く」。インストール・ログイン・ROS環境は不要です。
+
+![合成データを12秒まで再生した画面](docs/images/replay.png)
+
+ローカルで動かす場合はNode.js 24以上が必要です。
 
 ```sh
 npm ci
@@ -98,7 +102,7 @@ ROS_DOMAIN_ID=1 python3 backend/awsim_debug_bridge.py \
 ## 検証と制限
 
 - `npm test`: 合成MCAP/CDRに対する10項目。zstd、MPC候補、原点、欠測、索引なし、分割ファイル、不正入力を確認します。
-- `npm run test:browser`: ビルド後にChromeで1440px/390pxの入口・再生・エラーを確認し、6枚のスクリーンショットを保存します。横方向のはみ出し、未処理例外、地図の描画、再生、エラーからの復帰を検査します。`CHROME_BIN`で実行ファイルを指定できます。
+- `npm run test:browser`: ビルド後にChromeで1440px/390pxの入口・再生・エラーを確認し、12枚のスクリーンショットを保存します。横方向のはみ出し、未処理例外、地図の描画、再生、エラーからの復帰を検査します。`CHROME_BIN`で実行ファイルを指定できます。
 - [検証状況](docs/VALIDATION.md)に実行済みと未実行の項目を記録しています。
 
 読み込みではファイル全体と解析結果をメモリに保持し、20Hzの再生フレームを作ります。大きな記録や長時間の走行はPCで短い区間から試してください。メッセージは各フレーム時刻までの直近値を保持し、通信遅延を補正した厳密な同期は行いません。

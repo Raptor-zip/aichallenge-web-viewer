@@ -25,6 +25,7 @@ const pending = new Map(); let seq = 0, session;
 const errors = [];
 try {
   await mkdir(output, { recursive: true });
+  await rm(join(output, 'checks.json'), {force:true});
   await new Promise((yes, no) => { server.once('error', no); server.listen(0, '127.0.0.1', yes); });
   const appUrl = `http://127.0.0.1:${server.address().port}${prefix}`;
   profile = await mkdtemp(join(tmpdir(), 'ksk-viewer-qa-'));
@@ -82,6 +83,7 @@ try {
     await evaluate("for(let i=0;i<12;i++)window.dispatchEvent(new KeyboardEvent('keydown',{code:'ArrowRight',shiftKey:true,bubbles:true}))");
     await delay(200);
     assert(await evaluate(`(()=>{const c=document.querySelector('.track-canvas');const b=c.getContext('2d').getImageData(0,0,c.width,c.height).data;const colors=new Set();for(let i=0;i<b.length;i+=16)colors.add(b[i]+','+b[i+1]+','+b[i+2]);return colors.size>5})()`), 'map must draw data');
+    assert.equal(await evaluate("document.querySelector('.chart-panel').textContent.includes('NaN')"), false, 'missing values must have readable labels');
     await capture(`02-replay-${name}`);
     await evaluate("document.querySelector('.playback-controls button:nth-of-type(2)').click()"); await delay(300);
     assert(await evaluate("document.querySelector('.playback-controls').textContent.includes('一時停止')"), 'play must start');
@@ -90,8 +92,27 @@ try {
     await waitFor('!!document.querySelector(".bag-error")'); await capture(`03-error-${name}`);
     await evaluate("document.querySelector('.demo-button').click()"); await waitFor('!!document.querySelector(".playback-bar")');
     assert.equal(await evaluate('!!document.querySelector(".bag-error")'), false, 'valid recording must recover from invalid file');
+    await send('Page.navigate', {url:appUrl}); await waitFor('!!document.querySelector(".welcome")');
+    await evaluate(`(async()=>{const dt=new DataTransfer();dt.items.add(new File([await(await fetch('demo.mcap')).blob()],'local-run.mcap'));dt.items.add(new File([await(await fetch('demo-track.json')).blob()],'track.json'));const el=document.querySelector('input[type=file]');el.files=dt.files;el.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    await waitFor('!!document.querySelector(".playback-bar") && !!document.querySelector(".map-notice")');
+    await evaluate("for(let i=0;i<12;i++)window.dispatchEvent(new KeyboardEvent('keydown',{code:'ArrowRight',shiftKey:true,bubbles:true}))");
+    await capture(`04-local-files-${name}`);
+    await evaluate("[...document.querySelectorAll('.track-panel button')].find(b=>b.textContent==='レイヤ').click()");
+    await waitFor('!!document.querySelector(".layer-panel")'); await capture(`05-layers-${name}`);
+    await evaluate("document.querySelector('.layer-panel input[type=checkbox]').click()");
+    assert.equal(await evaluate("document.querySelector('.layer-panel input[type=checkbox]').checked"), false, 'layer can toggle');
+    await send('Page.navigate', {url:appUrl}); await waitFor('!!document.querySelector(".welcome")');
+    await evaluate("[...document.querySelectorAll('.app-header button')].find(b=>b.textContent==='ライブ接続').click()");
+    await waitFor('!!document.querySelector(".connect-form")');
+    await evaluate(`(()=>{const el=document.querySelector('.connect-form input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,'https://example.invalid');el.dispatchEvent(new Event('input',{bubbles:true}));})()`);
+    await evaluate("document.querySelector('.connect-form').requestSubmit()");
+    await waitFor('!!document.querySelector(".bag-error")'); await capture(`06-connection-error-${name}`);
+    assert(await evaluate("document.querySelector('.bag-error').textContent.includes('ws://')"), 'unsupported scheme must explain the valid URL');
+    await evaluate("[...document.querySelectorAll('.connect-form button')].find(b=>b.textContent==='切断').click()");
+    await waitFor('!!document.querySelector(".welcome")');
+    await evaluate('localStorage.clear()');
   }
-  await writeFile(join(output,'checks.json'), JSON.stringify({passed:true,viewports:2,screenshots:6,runtimeExceptions:errors},null,2));
+  await writeFile(join(output,'checks.json'), JSON.stringify({passed:true,viewports:2,screenshots:12,runtimeExceptions:errors},null,2));
 } catch (error) { console.error(error); process.exitCode = 1; }
 finally {
   socket?.close(); chrome?.kill(); server.close();

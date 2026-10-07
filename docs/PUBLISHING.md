@@ -1,10 +1,14 @@
-# 公開手順
+# 公開・更新手順
 
-予定先は`Raptor-zip/aichallenge-web-viewer`です。公開先はこの文書作成時点では未作成・未確認です。
+ソース: [Raptor-zip/aichallenge-web-viewer](https://github.com/Raptor-zip/aichallenge-web-viewer)
 
-コード、MITライセンス、合成デモ、自動テスト、GitHub Pagesワークフローは用意済みです。現在の実行環境はネットワークとローカル待ち受けが制限されているため、GitHubへの公開と修正後のChrome確認は完了していません。
+公開ページ: [AI Challenge Web Viewer](https://raptor-zip.github.io/aichallenge-web-viewer/)
 
-ネットワークとChromeが使える環境で、まず以下を実行します。
+GitHub Pagesのビルド方式はGitHub Actionsに設定済みです。アプリの変更をmainへpushすると、`Verify viewer`がインストール・テスト・ビルド・Chrome検証を行います。成功後に`Publish viewer`が同じコミットを再確認して配置します。PRや別リポジトリのコードからは公開しません。
+
+README、docs、LICENSEだけの更新はアプリを再配置しません。手動配置はActionsの`Publish viewer` → Run workflowです。
+
+## 配置前の確認
 
 ```sh
 npm ci
@@ -13,19 +17,12 @@ npm run build
 npm run test:browser
 ```
 
-6枚の画像を1枚ずつ開き、入口、再生、エラーをPCとスマートフォン幅で確認します。特に地図が描かれ、操作や凡例がはみ出さないことを確認してください。
+生成された12枚の画像を1枚ずつ開き、入口、再生、エラー、MCAP+JSONの取り込み、レイヤ、不正接続URLの表示をPCと390px幅で確認します。地図が描かれ、操作や凡例がはみ出さないこと、未収録値がNaNや0にならないことを確認してください。
 
-この独立リポジトリの`main`を公開します。
+## 公開後の確認
 
-```sh
-gh repo create Raptor-zip/aichallenge-web-viewer --public \
-  --description 'Browser-local ROS 2 MCAP replay and MPC diagnostics for AI Challenge' \
-  --source . --remote origin --push
-gh api --method POST repos/Raptor-zip/aichallenge-web-viewer/pages -f build_type=workflow
-```
+Actionsの成功だけでなく、上記の公開ページを開いて「60秒のデモを開く」を押します。WorkerとMCAPを公開URLから読み込めること、再生・停止・シークが動くこと、ブラウザの未処理例外がないことを確認してください。
 
-既に同名リポジトリがある場合は、送信先と内容を確認してから既存originへの通常のpushで続けます。履歴の上書きはしません。
+確認結果は[VALIDATION.md](VALIDATION.md)に記録します。公式ROS/実車環境でのライブ接続確認は別項目です。
 
-`Verify viewer`の成功後、`Publish viewer`が同じコミットをビルド・検証してGitHub Pagesに配置します。Actionsの成功と、表示された実URLでデモの読み込みを確認してから公開完了とします。
-
-GitHub Pagesの権限・環境・成果物の構成は[GitHub公式ドキュメント](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)に従っています。
+GitHub Pagesの権限・環境・成果物は[GitHub公式ドキュメント](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)に従っています。
